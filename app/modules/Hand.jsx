@@ -3,7 +3,6 @@ import * as hc from '../constants/handCategories';
 export default class Hand {
 	constructor() {
 		this.values = [];
-		this.sortedValues = [];
 		this.category = null;
 		this.getValues = this.getValues.bind(this);
 		this.decideBestCombination = this.decideBestCombination.bind(this);
@@ -26,16 +25,11 @@ export default class Hand {
 	clear() {
 		console.log('clear hand');
 		this.values = [];
-		this.sortedValues = [];
 		this.category = null;
 	}
 
 	getValues() {
 		return this.values;
-	}
-
-	getSortedValues() {
-		return this.sortedValues;
 	}
 
 	getCategory() {
@@ -72,19 +66,8 @@ export default class Hand {
 	 * @return Sorted array
 	 */
 	static sortCards(cardVlaues) {
-		// let copy = [...cardVlaues];
-		// let len = copy.length; // should always be 5
-		// let j;
-		// for (let p = 1; p < len; p++) {
-		// 	let tmp = copy[p];
-		// 	for (j = p; j > 0 && (tmp < copy[j-1]); j--) {
-		// 		copy[j] = copy[j-1]; 
-		// 	}
-		// 	copy[j] = tmp;
-		// }
-		// return copy;
 		const copy = [...cardVlaues];
-		return [...copy.sort((a, b) => b -a)];
+		return copy.sort((a, b) => b -a);
 	}
 
 	/**

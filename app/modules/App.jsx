@@ -64,7 +64,7 @@ export default class App extends React.Component  {
 					onClick={this.refresh}
 				>
 					<h2>Card number {(this.state.handA).getValues().length}</h2>
-					<h2>Card print {(this.state.handA).getValues().join(' ,')}</h2>
+					<h2>Card print {(this.state.handA).getValues().map((v) => v <= 13 ? v : v - 13).join(' ,')}</h2>
 					{[...new Array(13)].map((v, i) =>
 						<Card
 							key={i}
