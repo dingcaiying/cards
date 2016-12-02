@@ -22,7 +22,7 @@ export default class Card extends React.Component  {
 	onClickRemove() {
 		let oldCount = this.state.count;
 		if (oldCount <= 0) {
-			alert('sorry, the min amount is 0. you cannot remove more.');
+			// alert('sorry, the min amount is 0. you cannot remove more.');
 			return;
 		}
 		this.setState({

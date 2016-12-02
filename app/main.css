@@ -533,7 +533,7 @@ p p {
 }
 h1, h2, h3,  h4, h5, h6, strong, b, p {
     line-height: 1.25em;
-    margin-bottom: 0.5em; 
+    margin-bottom: 0.1em; 
     color: inherit; 
 }
 hr {
@@ -608,6 +608,7 @@ hr {
   text-transform: uppercase;
   cursor: pointer;
   transition: .4s all ease-in-out;
+  margin-left: 15px;
 }
 
 /* =================================
@@ -624,8 +625,8 @@ hr {
 .card {
   position: relative;
   display: inline-block;
-  width: 160px;
-  height: 200px;
+  width: 120px;
+  height: 145px;
   margin: 5px;
   background-color: rgba(243, 46, 91, 0.73);
   transition: all 0.4s ease-in-out;

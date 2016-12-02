@@ -6,16 +6,10 @@ export default class Hand {
 		this.sortedValues = [];
 		this.category = null;
 		this.getValues = this.getValues.bind(this);
-	}
-
-	initialize(values) {
-		this.setValues(values);
-		this.values = [...this.decideBestCombination()];
-		console.log(this.values);
+		this.decideBestCombination = this.decideBestCombination.bind(this);
 	}
 
 	pushValue(value) {
-		console.log('push value', this.values);
 		if (this.values.length < 5) {
 			this.values.push(value);
 			return true;
@@ -26,9 +20,14 @@ export default class Hand {
 	}
 
 	popValue(value) {
-		console.log('pop value', this.values);
 		this.values.splice(this.values.indexOf(value), 1);
-		console.log('after pop value', this.values);
+	}
+
+	clear() {
+		console.log('clear hand');
+		this.values = [];
+		this.sortedValues = [];
+		this.category = null;
 	}
 
 	getValues() {
@@ -44,21 +43,48 @@ export default class Hand {
 	}
 
 	/**
+	 * Desctiption: Consider 'A' as two separate values: [1, 14].
+	 * So there will be two possible combination. Find the higher rank one
+	 * as its values (and category...)
+	 * @return Array Beat combination (may sorted or not)
+	 */
+	decideBestCombination() {
+		let tmpValues = [...this.values];
+		if (tmpValues.length <= 0) {
+			console.log('empty hand values');
+			return this;
+		}
+		if (!tmpValues.includes(1)) {
+			return this;
+		}
+		const valuesA = [...tmpValues];
+		const valuesB = tmpValues.map((v) => {
+			if (v === 1) return 14;
+			else return v;
+		});
+		const result = Hand.compare(valuesA, valuesB);
+		this.values = result > 0 ? valuesA : valuesB;
+		return this;
+	}
+
+	/**
 	 * @param Array
 	 * @return Sorted array
 	 */
 	static sortCards(cardVlaues) {
-		let copy = [...cardVlaues];
-		let len = copy.length; // should always be 5
-		let j;
-		for (let p = 1; p < len; p++) {
-			let tmp = copy[p];
-			for (j = p; j > 0 && (tmp < copy[j-1]); j--) {
-				copy[j] = copy[j-1]; 
-			}
-			copy[j] = tmp;
-		}
-		return copy;
+		// let copy = [...cardVlaues];
+		// let len = copy.length; // should always be 5
+		// let j;
+		// for (let p = 1; p < len; p++) {
+		// 	let tmp = copy[p];
+		// 	for (j = p; j > 0 && (tmp < copy[j-1]); j--) {
+		// 		copy[j] = copy[j-1]; 
+		// 	}
+		// 	copy[j] = tmp;
+		// }
+		// return copy;
+		const copy = [...cardVlaues];
+		return [...copy.sort((a, b) => b -a)];
 	}
 
 	/**
@@ -73,8 +99,8 @@ export default class Hand {
 			breakpoint: [],
 		};
 		const len = values.length;
-		for (let i = 1; i < len; i++) {
-			let result = values[i] - values[i-1];
+		for (let i = 0; i < len - 1; i++) {
+			let result = values[i] - values[i+1];
 			if (!recordObj.count[result]) {
 				recordObj.count[result] = 0;
 			}
@@ -113,50 +139,34 @@ export default class Hand {
 	}
 
 	/**
-	 * @param  Hand values
-	 * @param  Hand values
+	 * @param  Hand values / Hand
+	 * @param  Hand values / Hand
 	 * @return hand1 > hand2. 1, 0, -1
 	 */
-	static compare(hand1, hand2) {
-		const sortedHand1 = Hand.sortCards(hand1);
-		const sortedHand2 = Hand.sortCards(hand2);
-		const hand1Category = Hand.tellCategory(sortedHand1);
-		const hand2Category = Hand.tellCategory(sortedHand2);
-		let result = hand1Category - hand2Category;
+	static compare(handA, handB) {
+		let valuesA, valuesB;
+		if (Array.isArray(handA)) {
+			valuesA = handA;
+			valuesB = handB;
+		} else {
+			valuesA = handA.decideBestCombination().getValues();
+			valuesB = handB.decideBestCombination().getValues();
+		}
+		const sortedValuesA = Hand.sortCards(valuesA);
+		const sortedValuesB = Hand.sortCards(valuesB);
+		const categoryA = Hand.tellCategory(sortedValuesA);
+		const categoryB = Hand.tellCategory(sortedValuesB);
+		let result = categoryA - categoryB;
 		if (result === 0) {
-			const len = hand1Category.length;
+			const len = sortedValuesA.length;
 			for (let i = 0; i < len; i++) {
-				result = sortedHand1[i] - sortedHand2[i];
+				result = sortedValuesA[i] - sortedValuesB[i];
 				if (result !== 0) {
 					break;
 				}
 			}
 		}
 		return result === 0 ? result : result / Math.abs(result);
-	}
-
-	/**
-	 * Desctiption: Consider 'A' as two separate values: [1, 14].
-	 * So there will be two possible combination. Find the higher rank one
-	 * as its values (and category...)
-	 * @return Array Beat combination (may sorted or not)
-	 */
-	decideBestCombination() {
-		let tmpValues = [...this.values];
-		if (tmpValues.length <= 0) {
-			console.log('empty hand values');
-			return;
-		}
-		if (!tmpValues.includes(1)) {
-			return [...tmpValues];
-		}
-		const hand1 = [...tmpValues];
-		const hand2 = tmpValues.map((v) => {
-			if (v === 1) return 14;
-			else return v;
-		});
-		const result = Hand.compare(hand1, hand2);
-		return result > 0 ? hand1 : hand2;
 	}
 
 }
