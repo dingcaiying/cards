@@ -594,11 +594,36 @@ hr {
   Cards
 ================================== */
 
+.group {}
+
 .card {
+  position: relative;
   display: inline-block;
-  width: 120px;
-  background-color: #87e6fe;
+  width: 160px;
+  height: 200px;
+  background-color: #fbaa47;
+  margin: 5px;
+  transition: all 0.4s ease-in-out;
+}
+.card-inner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
   color: #fff;
   text-align: center;
-  margin-right: 15px;
+}
+.card-left-remove,
+.card-right-add {
+  position: absolute;
+  width: 50%;
+  height: 100%;
+  top: 0;
+}
+.card-left-remove {
+  left: 0;
+}
+.card-right-add {
+  right: 0;
+  text-align: right;
 }

@@ -1,7 +1,8 @@
 import React from 'react';
-// import Card from './Card';
-import Hand from './Hand';
+import Card from './Card';
+// import Hand from './Hand';
 
+// <Hand values={[10, 10, 10,  13, 15]} />
 // App interface
 export default class App extends React.Component  {
 
@@ -9,7 +10,9 @@ export default class App extends React.Component  {
 		return (
 			<div id="app">
 				<div className="group">
-					<Hand values={[1, 2, 3, 4, 5]} />
+					{[...new Array(13)].map((v, i) =>
+						<Card key={i} value={i+1} />
+					)}					
 				</div>
 			</div>
 		);
