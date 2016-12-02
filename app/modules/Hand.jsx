@@ -6,17 +6,32 @@ export default class Hand extends React.Component  {
 	constructor(props) {
 		super(props);
 		this.values = props.values || [];
+
 		this.sortedValues = [];
 		this.category = null;
 	}
 
 	componentDidMount() {
-		this.getSorted();
-		this.getCategory();
+		this.values = [...this.decideBestCombination()];
+		console.log(this.values);
+		// this.sortedValues = Hand.sortCards(this.values);
+		// this.category = Hand.tellCategory(this.sortedValues);
 	}
 
-	getSorted() {
-		let copy = [...this.values];
+	getSortedValues() {
+		return this.sortedValues;
+	}
+
+	getCategory() {
+		return this.category;
+	}
+
+	/**
+	 * @param Array
+	 * @return Sorted array
+	 */
+	static sortCards(cardVlaues) {
+		let copy = [...cardVlaues];
 		let len = copy.length; // should always be 5
 		let j;
 		for (let p = 1; p < len; p++) {
@@ -26,19 +41,23 @@ export default class Hand extends React.Component  {
 			}
 			copy[j] = tmp;
 		}
-		this.sortedValues = [...copy];
+		return copy;
 	}
 
-	getCategory() {
-		// assue values.length === 5.
-		const sortedValues = this.sortedValues;
+	/**
+	 * @param Array
+	 * @return According to array values, tell the category
+	 */
+	static tellCategory(sortedValues) {
+		const values = [...sortedValues];
+		let category = hc.HIGH_CARD;
 		const recordObj = {
 			count: {},
 			breakpoint: [],
 		};
-		const len = sortedValues.length;
+		const len = values.length;
 		for (let i = 1; i < len; i++) {
-			let result = sortedValues[i] - sortedValues[i-1];
+			let result = values[i] - values[i-1];
 			if (!recordObj.count[result]) {
 				recordObj.count[result] = 0;
 			}
@@ -51,29 +70,76 @@ export default class Hand extends React.Component  {
 		switch (recordObj.count[0]) {
 			case 3:
 				if (5 % recordObj.breakpoint[0] < 2) {
-					this.category = hc.FOUR_A_KIND;
+					category = hc.FOUR_A_KIND;
 				} else {
-					this.category = hc.FULL_HOUSE;
+					category = hc.FULL_HOUSE;
 				}
 				break;
 			case 2:
 				if (recordObj.breakpoint.length === 1 && recordObj.breakpoint[0] === 2 || recordObj.breakpoint[0] === 3) {
-					this.category = hc.THREE_A_KIND;
+					category = hc.THREE_A_KIND;
 				} else {
-					this.category = hc.TWO_PAIR;
+					category = hc.TWO_PAIR;
 				}
 				break;
 			case 1:
-				this.category = hc.ONE_PAIR;
+				category = hc.ONE_PAIR;
 				break;
 			default:
-				this.category = hc.HIGH_CARD;
+				category = hc.HIGH_CARD;
 				break;
 		}
 		if (recordObj.count[1] === 4) {
-			this.category = hc.STRAIGHT;
+			category = hc.STRAIGHT;
 		}
-		console.log(this.category);
+		return category;
+	}
+
+	/**
+	 * @param  Hand values
+	 * @param  Hand values
+	 * @return hand1 > hand2. 1, 0, -1
+	 */
+	static compare(hand1, hand2) {
+		const sortedHand1 = Hand.sortCards(hand1);
+		const sortedHand2 = Hand.sortCards(hand2);
+		const hand1Category = Hand.tellCategory(sortedHand1);
+		const hand2Category = Hand.tellCategory(sortedHand2);
+		let result = hand1Category - hand2Category;
+		if (result === 0) {
+			const len = hand1Category.length;
+			for (let i = 0; i < len; i++) {
+				result = sortedHand1[i] - sortedHand2[i];
+				if (result !== 0) {
+					break;
+				}
+			}
+		}
+		return result === 0 ? result : result / Math.abs(result);
+	}
+
+	/**
+	 * Desctiption: Consider 'A' as two separate values: [1, 14].
+	 * So there will be two possible combination. Find the higher rank one
+	 * as its values (and category...)
+	 * @return Array Beat combination (may sorted or not)
+	 */
+	decideBestCombination() {
+		let tmpValues = [...this.values];
+		if (tmpValues.length <= 0) {
+			console.log('empty hand values');
+			return;
+		}
+		if (!tmpValues.includes(1)) {
+			return [...tmpValues];
+		}
+		const hand1 = [...tmpValues];
+		const hand2 = tmpValues.map((v) => {
+			if (v === 1) return 14;
+			else return v;
+		});
+		const result = Hand.compare(hand1, hand2);
+		return result > 0 ? hand1 : hand2;
 	}
 
 	render() {
