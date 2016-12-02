@@ -28,6 +28,7 @@ export default class Card extends React.Component  {
 		this.setState({
 			count: --oldCount,
 		});
+		this.props.refHand.popValue(this.props.value);
 	}
 
 	onClickAdd() {
@@ -36,9 +37,12 @@ export default class Card extends React.Component  {
 			alert('sorry, the max amount is 4. you cannot add more.');
 			return;
 		}
-		this.setState({
-			count: ++oldCount,
-		});
+		const passed = this.props.refHand.pushValue(this.props.value);
+		if (passed) {
+			this.setState({
+				count: ++oldCount,
+			});
+		}
 	}
 
 	render() {

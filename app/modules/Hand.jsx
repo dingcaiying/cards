@@ -1,21 +1,38 @@
-import React from 'react';
-import Card from './Card'; 
 import * as hc from '../constants/handCategories';
 
-export default class Hand extends React.Component  {
-	constructor(props) {
-		super(props);
-		this.values = props.values || [];
-
+export default class Hand {
+	constructor() {
+		this.values = [];
 		this.sortedValues = [];
 		this.category = null;
+		this.getValues = this.getValues.bind(this);
 	}
 
-	componentDidMount() {
+	initialize(values) {
+		this.setValues(values);
 		this.values = [...this.decideBestCombination()];
 		console.log(this.values);
-		// this.sortedValues = Hand.sortCards(this.values);
-		// this.category = Hand.tellCategory(this.sortedValues);
+	}
+
+	pushValue(value) {
+		console.log('push value', this.values);
+		if (this.values.length < 5) {
+			this.values.push(value);
+			return true;
+		} else {
+			alert('already five cards in your hand.');
+			return false;
+		}
+	}
+
+	popValue(value) {
+		console.log('pop value', this.values);
+		this.values.splice(this.values.indexOf(value), 1);
+		console.log('after pop value', this.values);
+	}
+
+	getValues() {
+		return this.values;
 	}
 
 	getSortedValues() {
@@ -142,14 +159,4 @@ export default class Hand extends React.Component  {
 		return result > 0 ? hand1 : hand2;
 	}
 
-	render() {
-		return (
-			<div>
-				<h1>Hand</h1>
-				{this.values.map((value, i) =>
-					<Card key={i} value={value} />
-				)}
-			</div>
-		);
-	}
 }
