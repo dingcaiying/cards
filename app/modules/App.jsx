@@ -63,8 +63,8 @@ export default class App extends React.Component  {
 					className="group groupA"
 					onClick={this.refresh}
 				>
-					<h2>Card number {(this.state.handA).getValues().length}</h2>
-					<h2>Card print {(this.state.handA).getValues().map((v) => v <= 13 ? v : v - 13).join(' ,')}</h2>
+					<h3>Card number {(this.state.handA).getValues().length}</h3>
+					<h3>Card print {(this.state.handA).getValues().map((v) => v <= 13 ? v : v - 13).join(' ,')}</h3>
 					{[...new Array(13)].map((v, i) =>
 						<Card
 							key={i}
@@ -77,8 +77,8 @@ export default class App extends React.Component  {
 					className="group groupB"
 					onClick={this.refresh}
 				>
-					<h2>Card number {(this.state.handB).getValues().length}</h2>
-					<h2>Card print {(this.state.handB).getValues().join(' ,')}</h2>
+					<h3>Card number {(this.state.handB).getValues().length}</h3>
+					<h3>Card print {(this.state.handB).getValues().map((v) => v <= 13 ? v : v - 13).join(' ,')}</h3>
 					{[...new Array(13)].map((v, i) =>
 						<Card
 							key={i}
