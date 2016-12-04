@@ -65,7 +65,7 @@ export default class App extends React.Component  {
 				>
 					<h3>A:</h3>
 					<h3>Card number {(this.state.handA).getValues().length}</h3>
-					<h3>Card print {(this.state.handA).getValues().map((v) => v <= 13 ? v : v - 13).join(' ,')}</h3>
+					<h3>Card print {(this.state.handA).getValues().map((v) => Card.convertValueToText(v)).join(' ,')}</h3>
 					{[...new Array(13)].map((v, i) =>
 						<Card
 							key={i}
@@ -80,7 +80,7 @@ export default class App extends React.Component  {
 				>
 					<h3>B:</h3>
 					<h3>Card number {(this.state.handB).getValues().length}</h3>
-					<h3>Card print {(this.state.handB).getValues().map((v) => v <= 13 ? v : v - 13).join(' ,')}</h3>
+					<h3>Card print {(this.state.handB).getValues().map((v) => Card.convertValueToText(v)).join(' ,')}</h3>
 					{[...new Array(13)].map((v, i) =>
 						<Card
 							key={i}

@@ -45,9 +45,9 @@ export default class Card extends React.Component  {
 		}
 	}
 
-	convertValueToText(value) {
+	static convertValueToText(value) {
 		if (!value) return value;
-		const text = ['A', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+		const text = ['0', 'A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
 		return text[value];
 	}
 
@@ -57,7 +57,7 @@ export default class Card extends React.Component  {
 				<div className="card-inner">
 					<div className="content">
 						<h4 className="card-name">
-							{this.convertValueToText(this.props.value)}
+							{Card.convertValueToText(this.props.value)}
 						</h4>
 						<h4>{`count: ${this.state.count}`}</h4>
 					</div>
