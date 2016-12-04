@@ -44,6 +44,13 @@ export default class App extends React.Component  {
 		const { handA, handB } = this.state;
 		handA.clear();
 		handB.clear();
+		Object.keys(this.refs).map((key) => {
+			try {
+				this.refs[key].clearCount();
+			} catch (err) {
+				console.error(err);
+			}
+		});
 		this.forceUpdate();
 	}
 
@@ -71,6 +78,7 @@ export default class App extends React.Component  {
 							key={i}
 							value={i+1}
 							refHand={this.state.handA}
+							ref={`card_A_${i}`}
 						/>
 					)}					
 				</div>
@@ -86,6 +94,7 @@ export default class App extends React.Component  {
 							key={i}
 							value={i+1}
 							refHand={this.state.handB}
+							ref={`card_B_${i}`}
 						/>
 					)}					
 				</div>

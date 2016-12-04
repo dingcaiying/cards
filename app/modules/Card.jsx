@@ -19,6 +19,10 @@ export default class Card extends React.Component  {
 		return this.props.value;
 	}
 
+	clearCount() {
+		this.state.count = 0;
+	}
+
 	onClickRemove() {
 		let oldCount = this.state.count;
 		if (oldCount <= 0) {

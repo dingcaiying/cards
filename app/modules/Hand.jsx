@@ -23,7 +23,6 @@ export default class Hand {
 	}
 
 	clear() {
-		console.log('clear hand');
 		this.values = [];
 		this.category = null;
 	}
