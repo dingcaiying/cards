@@ -22,6 +22,7 @@ export default class App extends React.Component  {
 		}
 		this.reset = this.reset.bind(this);
 		this.gameStart = this.gameStart.bind(this);
+		this.closePopup = this.closePopup.bind(this);
 	}
 
 	reset() {
@@ -72,6 +73,12 @@ export default class App extends React.Component  {
 		});
 	}
 
+	closePopup() {
+		this.setState({
+			openPopup: false,
+		});
+	}
+
 	render() {
 		return (
 			<div id="app">
@@ -116,6 +123,10 @@ export default class App extends React.Component  {
 					className={this.state.openPopup ? "popup active" : 'popup'}
 					id="popup-choice"
 					>
+					<span
+						className="close"
+						onClick={this.closePopup}
+					>close</span>
 					<div className="popup-head">
 						<h3>To whom?</h3>
 					</div>

@@ -94,7 +94,7 @@ export default class Hand {
 		// according to how many '0' & '1' in the diffs, get the category
 		switch (recordObj.count[0]) {
 			case 3:
-				if (5 % recordObj.breakpoint[0] < 2) {
+				if (recordObj.breakpoint[0] === 1 || recordObj.breakpoint[0] === 4) {
 					category = hc.FOUR_A_KIND;
 				} else {
 					category = hc.FULL_HOUSE;
