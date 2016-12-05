@@ -15,6 +15,11 @@ export default class Warehouse {
 		return this;
 	}
 
+	reset() {
+		this.stock = [];
+		this.initiateStock();
+	}
+
 	dealCard(value) {
 		const index = this.stock.indexOf(value);
 		if (index > -1) {

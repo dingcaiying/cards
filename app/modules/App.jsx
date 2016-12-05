@@ -20,7 +20,17 @@ export default class App extends React.Component  {
 		for (let i = 0; i < total; i++) {
 			this.state.hands.push(new Hand());
 		}
+		this.reset = this.reset.bind(this);
 		this.gameStart = this.gameStart.bind(this);
+	}
+
+	reset() {
+		const { warehouse, hands } = this.state;
+		warehouse.reset();
+		hands.map((h) => h.clear());
+		this.setState({
+			rank: [],
+		});
 	}
 
 	onClickCard(e, value) {
@@ -58,7 +68,7 @@ export default class App extends React.Component  {
 		const copyHands = [...hands];
 		copyHands.sort(Hand.compare);
 		this.setState({
-			rank: [...copyHands],
+			rank: [...copyHands.reverse()],
 		});
 	}
 
@@ -66,7 +76,7 @@ export default class App extends React.Component  {
 		return (
 			<div id="app">
 				<div className="toolbox">
-					<div className="btn">Clear</div>
+					<div className="btn" onClick={this.reset}>Clear</div>
 					<div className="btn" onClick={this.gameStart}>Start</div>
 				</div>
 				<div className="group">
