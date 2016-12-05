@@ -1,104 +1,124 @@
 import React from 'react';
 import Card from './Card';
 import Hand from './Hand';
+import Warehouse from './Warehouse';
 
-// <Hand values={[10, 10, 10,  13, 15]} />
-// App interface
+
+const total = 2;
+
 export default class App extends React.Component  {
 
 	constructor(props) {
 		super(props);
 		this.state = {
-			handA: new Hand(),
-			handB: new Hand(),
-			winner: null, // number
+			warehouse: new Warehouse(),
+			hands: [],
+			openPopup: false,
+			currentCard: null,
+			rank: [],
 		};
-		this.refresh = this.refresh.bind(this);
+		for (let i = 0; i < total; i++) {
+			this.state.hands.push(new Hand());
+		}
 		this.gameStart = this.gameStart.bind(this);
-		this.clearCards = this.clearCards.bind(this);
 	}
 
-	refresh() {
-		this.forceUpdate();
+	onClickCard(e, value) {
+		this.setState({
+			currentCard: value,
+			openPopup: true,
+		});
+	}
+
+	addToHand(i) {
+		const { warehouse, hands, currentCard } = this.state;
+		const allowed = warehouse.dealCard(currentCard);
+		if (allowed) {
+			hands[i].pushValue(currentCard);
+		} else {
+			alert(`no ${currentCard} in stock`);
+		}
+		this.setState({
+			openPopup: false,
+		});
 	}
 
 	gameStart() {
-		const { handA, handB } = this.state;
-		const handAValues = handA.getValues();
-		const handBValues = handB.getValues();
-		if (handAValues.length < 5) {
-			alert('Not enough cards for A.');
-			return;
-		}
-		if (handBValues.length < 5) {
-			alert('Not enough cards for B.');
-			return;
-		}
-		let result = Hand.compare(handA, handB);
-		this.setState({
-			winner: result,
-		});
-	}
-
-	clearCards() {
-		const { handA, handB } = this.state;
-		handA.clear();
-		handB.clear();
-		Object.keys(this.refs).map((key) => {
-			try {
-				this.refs[key].clearCount();
-			} catch (err) {
-				console.error(err);
+		const { hands } = this.state;
+		let valid = true;
+		const len = hands.length;
+		for (let i = 0; i < len; i++) {
+			if (hands[i].getValues().length < 5) {
+				alert(`hand - ${i} doesn't have enough card.`);
+				valid = false;
+				break;
 			}
+		}
+		if (!valid) return false;
+		const copyHands = [...hands];
+		copyHands.sort(Hand.compare);
+		this.setState({
+			rank: [...copyHands],
 		});
-		this.forceUpdate();
 	}
 
 	render() {
 		return (
 			<div id="app">
 				<div className="toolbox">
-					<div className="btn" onClick={this.clearCards}>Clear</div>
+					<div className="btn">Clear</div>
 					<div className="btn" onClick={this.gameStart}>Start</div>
-					<div className="message">
-						{this.state.winner === 1 && "A win!"}
-						{this.state.winner === -1 && "B win!"}
-						{this.state.winner === 0 && "Equal!"}
+				</div>
+				<div className="group">
+					{[...new Array(13)].map((v, i) =>
+						<Card
+							key={i}
+							value={i+1}
+							clickHandler={(e, v) => this.onClickCard(e, v)}
+						/>
+					)}
+				</div>
+				<div className="hand-group">
+					<h2>Hands</h2>
+					<ul>
+						{this.state.hands.map((hand, i) =>
+							<li key={i}>
+								<h3>{`Hand - ${i}: `}
+									{hand.getValues().map((v) => Card.convertValueToText(v)).join(' ,')}
+								</h3>
+							</li>
+						)}
+					</ul>
+				</div>
+				<div className="rank">
+					<h2>Rank</h2>
+					<ul>
+						{this.state.rank.map((r, i) =>
+							<li key={i}>
+								<h3>
+									{r.getValues().map((v) => Card.convertValueToText(v)).join(' ,')}
+								</h3>
+							</li>
+						)}
+					</ul>
+				</div>
+				<div
+					className={this.state.openPopup ? "popup active" : 'popup'}
+					id="popup-choice"
+					>
+					<div className="popup-head">
+						<h3>To whom?</h3>
+					</div>
+					<div className="popup-body">
+						<ul>
+							{[...new Array(total)].map((v, i) =>
+								<li key={i}>
+									<h4 onClick={() => this.addToHand(i)}>Hand - {i}</h4>
+								</li>
+							)}
+						</ul>
 					</div>
 				</div>
-				<div
-					className="group groupA"
-					onClick={this.refresh}
-				>
-					<h3>A:</h3>
-					<h3>Card number {(this.state.handA).getValues().length}</h3>
-					<h3>Card print {(this.state.handA).getValues().map((v) => Card.convertValueToText(v)).join(' ,')}</h3>
-					{[...new Array(13)].map((v, i) =>
-						<Card
-							key={i}
-							value={i+1}
-							refHand={this.state.handA}
-							ref={`card_A_${i}`}
-						/>
-					)}					
-				</div>
-				<div
-					className="group groupB"
-					onClick={this.refresh}
-				>
-					<h3>B:</h3>
-					<h3>Card number {(this.state.handB).getValues().length}</h3>
-					<h3>Card print {(this.state.handB).getValues().map((v) => Card.convertValueToText(v)).join(' ,')}</h3>
-					{[...new Array(13)].map((v, i) =>
-						<Card
-							key={i}
-							value={i+1}
-							refHand={this.state.handB}
-							ref={`card_B_${i}`}
-						/>
-					)}					
-				</div>
-
 			</div>
 		);
 	}
