@@ -84,10 +84,14 @@ export default class Hand {
 		  categories[count].push(i);
 		  i = j;
 		}
+		let result = [];
+		let tmpCopy = [];
+		let cur = [];
 		Object.keys(categories).map((key) => {
-		  [categories[key].reverse()].map((idx) => {
-		    const cur = copy.splice(idx, key);
-		    copy.splice(0, 0, ...cur);
+		  categories[key].reverse().map((idx) => {
+				tmpCopy = [...copy];
+		    cur = tmpCopy.splice(idx, key);
+		    result.splice(0, 0, ...cur);
 		  });
 		});
 		return [...copy];
