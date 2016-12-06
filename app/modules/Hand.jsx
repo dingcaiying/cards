@@ -86,10 +86,8 @@ export default class Hand {
 		}
 		Object.keys(categories).map((key) => {
 		  [categories[key].reverse()].map((idx) => {
-		    console.log('index', idx)
 		    const cur = copy.splice(idx, key);
 		    copy.splice(0, 0, ...cur);
-		    console.log('copy', copy)
 		  });
 		});
 		return [...copy];
