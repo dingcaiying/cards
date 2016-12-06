@@ -5,6 +5,7 @@ import Warehouse from './Warehouse';
 
 
 const total = 2;
+const handNames = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K'];
 
 export default class App extends React.Component  {
 
@@ -18,7 +19,7 @@ export default class App extends React.Component  {
 			rank: [],
 		};
 		for (let i = 0; i < total; i++) {
-			this.state.hands.push(new Hand());
+			this.state.hands.push(new Hand(handNames[i]));
 		}
 		this.reset = this.reset.bind(this);
 		this.gameStart = this.gameStart.bind(this);
@@ -104,7 +105,8 @@ export default class App extends React.Component  {
 					<ul>
 						{this.state.hands.map((hand, i) =>
 							<li key={i}>
-								<h3>{`Hand - ${i}: `}
+								<h3>
+									{`${hand.getName()} ~ `} 
 									{hand.getValues().map((v) => Card.convertValueToText(v)).join(' ,')}
 								</h3>
 							</li>
@@ -117,6 +119,8 @@ export default class App extends React.Component  {
 						{this.state.rank.map((r, i) =>
 							<li key={i}>
 								<h3>
+									<span>Rank {i + 1}: </span>
+									{`${r.getName()} ~ `}
 									{r.getValues().map((v) => Card.convertValueToText(v)).join(' ,')}
 								</h3>
 							</li>

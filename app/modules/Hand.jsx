@@ -1,11 +1,24 @@
 import * as hc from '../constants/handCategories';
 
 export default class Hand {
-	constructor() {
+	constructor(name) {
+		this.name = name;
 		this.values = [];
 		this.category = null;
 		this.getValues = this.getValues.bind(this);
 		this.decideBestCombination = this.decideBestCombination.bind(this);
+	}
+
+	getName() {
+		return this.name;
+	}
+
+	getValues() {
+		return this.values;
+	}
+
+	getCategory() {
+		return this.category;
 	}
 
 	pushValue(value) {
@@ -20,19 +33,6 @@ export default class Hand {
 
 	popValue(value) {
 		this.values.splice(this.values.indexOf(value), 1);
-	}
-
-	clear() {
-		this.values = [];
-		this.category = null;
-	}
-
-	getValues() {
-		return this.values;
-	}
-
-	getCategory() {
-		return this.category;
 	}
 
 	/**
@@ -58,6 +58,11 @@ export default class Hand {
 		const result = Hand.compare(valuesA, valuesB);
 		this.values = result > 0 ? valuesA : valuesB;
 		return this;
+	}
+
+	clear() {
+		this.values = [];
+		this.category = null;
 	}
 
 	/**
