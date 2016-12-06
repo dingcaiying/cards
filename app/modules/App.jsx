@@ -43,11 +43,15 @@ export default class App extends React.Component  {
 
 	addToHand(i) {
 		const { warehouse, hands, currentCard } = this.state;
-		const allowed = warehouse.dealCard(currentCard);
-		if (allowed) {
-			hands[i].pushValue(currentCard);
+		let handAllowed = hands[i].getValues().length < 5;
+		let whAllowed = false;
+		if (handAllowed) {
+			whAllowed = warehouse.dealCard(currentCard);
 		} else {
-			alert(`no ${currentCard} in stock`);
+			alert('already five cards in your hand.');
+		}
+		if (whAllowed) {
+			hands[i].pushValue(currentCard);
 		}
 		this.setState({
 			openPopup: false,

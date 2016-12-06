@@ -25,6 +25,8 @@ export default class Warehouse {
 		if (index > -1) {
 			this.stock.splice(index, 1);
 			return true;
+		} else {
+			alert(`no ${value} in stock`);
 		}
 		return false;
 	}
