@@ -66,7 +66,33 @@ export default class Hand {
 	 */
 	static sortCards(cardVlaues) {
 		const copy = [...cardVlaues];
-		return copy.sort((a, b) => b -a);
+		copy.sort((a, b) => b -a);
+		// sort: put category feature cards to the top.
+		const categories = {
+		  1: [],
+		  2: [],
+		  3: [],
+		  4: [],
+		};
+		const len = copy.length;
+		for (let i = 0; i < len;) {
+		  let j = i;
+		  let count = 1;
+		  while (++j < len && copy[j - 1] === copy[j]) {
+		    count ++;
+		  }
+		  categories[count].push(i);
+		  i = j;
+		}
+		Object.keys(categories).map((key) => {
+		  [categories[key].reverse()].map((idx) => {
+		    console.log('index', idx)
+		    const cur = copy.splice(idx, key);
+		    copy.splice(0, 0, ...cur);
+		    console.log('copy', copy)
+		  });
+		});
+		return [...copy];
 	}
 
 	/**
