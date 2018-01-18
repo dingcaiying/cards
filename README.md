@@ -1,6 +1,7 @@
-# Cards [https://dingcaiying.github.io/build/pages/cards/index.html]
+# Cards
 
-cards challenge
+Preview: https://dingcaiying.github.io/build/pages/cards/index.html
+
 
 > ## Poker Hand Evaluator Challenge
 >
